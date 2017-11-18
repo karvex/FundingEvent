@@ -52,7 +52,7 @@ contract FundingEvent {
     }
     
     function getSpeaker(uint index) public view returns (string, string, string) {
-        Speaker speaker = _speakers[index];
+        Speaker memory speaker = _speakers[index];
         require(bytes(speaker.name).length != 0);
         return (speaker.name, speaker.bio, speaker.url);
     }
@@ -70,7 +70,7 @@ contract FundingEvent {
     }
     
     function getLocation(uint index) public view returns (string, uint, uint) {
-        Location location = _locations[index];
+        Location memory location = _locations[index];
         require(location.capacity > 0);
         return (location.streetAddress, location.cost, location.capacity);
     }
@@ -100,12 +100,11 @@ contract FundingEvent {
     }
     
     function setMinMeetupAmount(address meetup, uint minAmount) public meetupExists(meetup) {
-        //TODO Should be storage because we change the state below, but we get error if using storage
-        //Meetup storage currentMeetup = getMeetup(meetup);
+        Meetup storage currentMeetup = getMeetup(meetup);
         require(speakerExists(msg.sender));
-        require(getMeetup(meetup).speaker == msg.sender);
-        require(msg.value > 0);
-        getMeetup(meetup).minAmount = minAmount;
+        require(currentMeetup.speaker == msg.sender);
+        require(minAmount > 0);
+        currentMeetup.minAmount = minAmount;
     }
     
     function participantWithdrawal(address meetup) public meetupExists(meetup) participantExists(msg.sender) {
@@ -119,8 +118,7 @@ contract FundingEvent {
     
     function speakerWithdrawal(address meetup) public meetupExists(meetup) {
         require(speakerExists(msg.sender));
-        //TODO Should be storage because we change the state below, but we get error if using storage
-        Meetup memory currentMeetup = getMeetup(meetup);
+        Meetup storage currentMeetup = getMeetup(meetup);
         require(currentMeetup.blockTime < now);
         currentMeetup.balance = 0;
         
@@ -130,7 +128,7 @@ contract FundingEvent {
         }
     }
     
-    function getMeetup(address meetup) private constant returns (Meetup) {
+    function getMeetup(address meetup) private constant returns (Meetup storage) {
         for (uint i=0; i < _meetups.length; i++) {
             if (_meetups[i].creator == meetup) {
                 return _meetups[i];
