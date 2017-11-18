@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './index.css'
-import Posts from './Posts'
+import RegisterSpeaker from './RegisterSpeaker'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 class Page extends Component {
@@ -9,7 +9,7 @@ class Page extends Component {
       <div className="App">
         <h1>Fundaspeaker</h1>
         <MuiThemeProvider>
-          <Posts />
+          <RegisterSpeaker />
         </MuiThemeProvider>
       </div>
     )

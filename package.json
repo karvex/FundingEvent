@@ -1,0 +1,18 @@
+{
+  "name": "ethws3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "dependencies": {
+    "solc": "^0.4.18",
+    "web3": "^1.0.0-beta.24"
+  },
+  "devDependencies": {
+    "grunt-express": "^1.4.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
