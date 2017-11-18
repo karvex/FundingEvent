@@ -4,7 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 
 
-class RegisterSpeaker extends Component {
+class RegisterParticipant extends Component {
   constructor(context) {
     super();
 
@@ -14,8 +14,7 @@ class RegisterSpeaker extends Component {
 
   state = {
     name: '',
-    bio: '',
-    imageUrl: ''
+    email: ''
   }
 
   handleChange = (event) => {
@@ -27,16 +26,16 @@ class RegisterSpeaker extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    window.contract.RegisterSpeaker(this.state.name, this.state.bio, this.state.imageUrl, { from: window.signedInUser }, function () {
+    window.contract.RegisterParticipant(this.state.name, this.state.email, { from: window.signedInUser }, function () {
       alert("success!");
     });
   }
 
   render() {
     return (
-      <div className="RegisterSpeaker" style={{ display: "flex", flexDirection: "column" }}>
-        <h1>Add Speaker</h1>
-        <div className="AddSpeaker">
+      <div className="RegisterParticipant" style={{ display: "flex", flexDirection: "column" }}>
+        <h1>Register Participant</h1>
+        <div className="RegisterParticipant">
           <TextField
             name="name"
             type="text"
@@ -46,19 +45,11 @@ class RegisterSpeaker extends Component {
             style={{ margin: 20 }} />
           
           <TextField
-            name="bio"
+            name="email"
             type="text"
-            placeholder="Bio"
+            placeholder="Email"
             onChange={this.handleChange}
             value={this.state.bio}
-            style={{ margin: 20 }} />
-
-          <TextField
-            name="imageUrl"
-            type="text"
-            placeholder="Image url"
-            onChange={this.handleChange}
-            value={this.state.imageUrl}
             style={{ margin: 20 }} />
 
           <RaisedButton
@@ -70,4 +61,4 @@ class RegisterSpeaker extends Component {
   }
 }
 
-export default RegisterSpeaker
+export default RegisterParticipant
