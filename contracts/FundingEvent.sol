@@ -2,16 +2,11 @@ pragma solidity ^0.4.18;
 
 contract FundingEvent {
     
-    function FundingEvent() public {
-            
-    }
-    
     Speaker[] public _speakers;
     mapping(address => Participant) public participants;
     Location[] private _locations;
     Meetup[] private _meetups;
     mapping(address => mapping(address => uint)) donators;
-    mapping(address => uint) meetupBalances;
     
     struct Speaker {
         address owner;
@@ -43,6 +38,7 @@ contract FundingEvent {
         address speaker;
         address location;
         uint minAmount;
+        uint balance;
         MeetupStatus status;
     }
     
@@ -84,23 +80,23 @@ contract FundingEvent {
         require(speakerExists(speaker));
         require(bytes(title).length > 0);
         require(blockTime > now);
-        _meetups.push(Meetup(msg.sender, title, blockTime, speaker, location, 0, MeetupStatus.ongoing));
+        _meetups.push(Meetup(msg.sender, title, blockTime, speaker, location, 0, 0, MeetupStatus.ongoing));
     }
     
     function getMeetups() public view returns (Meetup[]) {
         return _meetups;
     }
     
-    function getMeetup(uint index) public view returns (address, string, uint, address, address, uint, uint) {
-        Meetup meetup = _meetups[index];
+    function getMeetup(uint index) public view returns (address, string, uint, address, address, uint, uint, uint) {
+        Meetup memory meetup = _meetups[index];
         require(meetup.blockTime != 0);
-        return (meetup.creator, meetup.title, meetup.blockTime, meetup.speaker, meetup.location, meetup.minAmount, uint(meetup.status));
+        return (meetup.creator, meetup.title, meetup.blockTime, meetup.speaker, meetup.location, meetup.minAmount, meetup.balance, uint(meetup.status));
     }
     
     function donate(address meetup) payable public meetupExists(meetup) {
         require(msg.value > 0);
         donators[meetup][msg.sender] += msg.value;
-        meetupBalances[meetup] += msg.value;
+        getMeetup(meetup).balance += msg.value;
     }
     
     function setMinMeetupAmount(address meetup, uint minAmount) public meetupExists(meetup) {
@@ -126,12 +122,11 @@ contract FundingEvent {
         //TODO Should be storage because we change the state below, but we get error if using storage
         Meetup memory currentMeetup = getMeetup(meetup);
         require(currentMeetup.blockTime < now);
-        uint amount = meetupBalances[meetup];
-        meetupBalances[meetup] = 0;
+        currentMeetup.balance = 0;
         
         if (currentMeetup.status != MeetupStatus.finished) {
-            msg.sender.transfer(amount);
-            getMeetup(meetup).status = MeetupStatus.finished;
+            msg.sender.transfer(currentMeetup.balance);
+            currentMeetup.status = MeetupStatus.finished;
         }
     }
     
@@ -144,9 +139,18 @@ contract FundingEvent {
         revert();
     }
     
-    function speakerExists(address speaker) private returns (bool) {
+    function speakerExists(address speaker) private view returns (bool) {
         for (uint i=0; i < _speakers.length; i++) {
             if (_speakers[i].owner == speaker) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    function locationExists(address location) private view returns (bool) {
+        for (uint i=0; i < _locations.length; i++) {
+            if (_locations[i].owner == location) {
                 return true;
             }
         }
@@ -156,15 +160,6 @@ contract FundingEvent {
     modifier participantExists(address participant) {
         require(bytes(participants[participant].name).length != 0);
         _;
-    }
-    
-    function locationExists(address location) private returns (bool) {
-        for (uint i=0; i < _locations.length; i++) {
-            if (_locations[i].owner == location) {
-                return true;
-            }
-        }
-        return false;
     }
     
     modifier meetupExists(address meetup) {
