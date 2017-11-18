@@ -9,7 +9,6 @@ contract FundingEvent {
     Speaker[] public _speakers;
     mapping(address => Participant) public participants;
     Location[] private _locations;
-    mapping(address => Location) public locations;
     Meetup[] private _meetups;
     mapping(address => mapping(address => uint)) donators;
     mapping(address => uint) meetupBalances;
@@ -27,6 +26,7 @@ contract FundingEvent {
     }
     
     struct Location {
+        address owner;
         string streetAddress;
         uint cost;
         uint capacity;
@@ -57,6 +57,7 @@ contract FundingEvent {
     
     function getSpeaker(uint index) public view returns (string, string, string) {
         Speaker speaker = _speakers[index];
+        require(bytes(speaker.name).length != 0);
         return (speaker.name, speaker.bio, speaker.url);
     }
 
@@ -65,14 +66,21 @@ contract FundingEvent {
     }
     
     function registerLocation(string streetAddress, uint cost, uint capacity) public {
-        locations[msg.sender] = Location(streetAddress, cost, capacity);
+        _locations.push(Location(msg.sender, streetAddress, cost, capacity));
     }
     
-    function getLocation() public view returns (Location[]) {
+    function getLocations() public view returns (Location[]) {
         return _locations;
     }
     
-    function createMeetup(string title, uint blockTime, address speaker, address location) public locationExists(location) {
+    function getLocation(uint index) public view returns (string, uint, uint) {
+        Location location = _locations[index];
+        require(location.capacity > 0);
+        return (location.streetAddress, location.cost, location.capacity);
+    }
+    
+    function createMeetup(string title, uint blockTime, address speaker, address location) public {
+        require(locationExists(location));
         require(speakerExists(speaker));
         require(bytes(title).length > 0);
         require(blockTime > now);
@@ -81,6 +89,12 @@ contract FundingEvent {
     
     function getMeetups() public view returns (Meetup[]) {
         return _meetups;
+    }
+    
+    function getMeetup(uint index) public view returns (address, string, uint, address, address, uint, uint) {
+        Meetup meetup = _meetups[index];
+        require(meetup.blockTime != 0);
+        return (meetup.creator, meetup.title, meetup.blockTime, meetup.speaker, meetup.location, meetup.minAmount, uint(meetup.status));
     }
     
     function donate(address meetup) payable public meetupExists(meetup) {
@@ -144,9 +158,13 @@ contract FundingEvent {
         _;
     }
     
-    modifier locationExists(address location) {
-        require(locations[location].capacity > 0);
-        _;
+    function locationExists(address location) private returns (bool) {
+        for (uint i=0; i < _locations.length; i++) {
+            if (_locations[i].owner == location) {
+                return true;
+            }
+        }
+        return false;
     }
     
     modifier meetupExists(address meetup) {
