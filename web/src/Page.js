@@ -7,7 +7,6 @@ class Page extends Component {
   render() {
     return (
       <div className="App">
-        <h1>Fundaspeaker</h1>
         <MuiThemeProvider>
           <RegisterSpeaker />
         </MuiThemeProvider>
