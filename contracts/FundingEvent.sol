@@ -6,7 +6,6 @@ contract FundingEvent {
             
     }
     
-    mapping(address => Speaker) public speakers;
     Speaker[] public _speakers;
     mapping(address => Participant) public participants;
     Location[] private _locations;
@@ -16,6 +15,7 @@ contract FundingEvent {
     mapping(address => uint) meetupBalances;
     
     struct Speaker {
+        address owner;
         string name;
         string bio;
         string url;
@@ -47,10 +47,8 @@ contract FundingEvent {
     }
     
     function registerSpeaker(string name, string bio, string url) public {
-        require(bytes(speakers[msg.sender].name).length == 0);
-        Speaker memory s = Speaker(name, bio, url);
-        speakers[msg.sender] = s;
-        _speakers.push(s);
+        require(!speakerExists(msg.sender));
+        _speakers.push(Speaker(msg.sender, name, bio, url));
     }
     
     function getSpeakers() public view returns (Speaker[]) {
@@ -74,7 +72,8 @@ contract FundingEvent {
         return _locations;
     }
     
-    function createMeetup(string title, uint blockTime, address speaker, address location) public speakerExists(speaker) locationExists(location) {
+    function createMeetup(string title, uint blockTime, address speaker, address location) public locationExists(location) {
+        require(speakerExists(speaker));
         require(bytes(title).length > 0);
         require(blockTime > now);
         _meetups.push(Meetup(msg.sender, title, blockTime, speaker, location, 0, MeetupStatus.ongoing));
@@ -90,9 +89,10 @@ contract FundingEvent {
         meetupBalances[meetup] += msg.value;
     }
     
-    function setMinMeetupAmount(address meetup, uint minAmount) public meetupExists(meetup) speakerExists(msg.sender) {
+    function setMinMeetupAmount(address meetup, uint minAmount) public meetupExists(meetup) {
         //TODO Should be storage because we change the state below, but we get error if using storage
         //Meetup storage currentMeetup = getMeetup(meetup);
+        require(speakerExists(msg.sender));
         require(getMeetup(meetup).speaker == msg.sender);
         require(msg.value > 0);
         getMeetup(meetup).minAmount = minAmount;
@@ -107,7 +107,8 @@ contract FundingEvent {
         }
     }
     
-    function speakerWithdrawal(address meetup) public meetupExists(meetup) speakerExists(msg.sender) {
+    function speakerWithdrawal(address meetup) public meetupExists(meetup) {
+        require(speakerExists(msg.sender));
         //TODO Should be storage because we change the state below, but we get error if using storage
         Meetup memory currentMeetup = getMeetup(meetup);
         require(currentMeetup.blockTime < now);
@@ -129,9 +130,13 @@ contract FundingEvent {
         revert();
     }
     
-    modifier speakerExists(address speaker) {
-        require(bytes(speakers[speaker].name).length != 0);
-        _;
+    function speakerExists(address speaker) private returns (bool) {
+        for (uint i=0; i < _speakers.length; i++) {
+            if (_speakers[i].owner == speaker) {
+                return true;
+            }
+        }
+        return false;
     }
     
     modifier participantExists(address participant) {
