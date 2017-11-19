@@ -44,7 +44,7 @@ export default class RegisterMeetup extends Component {
     }
 
     handleDateChange = (arg, date) => {
-        var unixtime = Date.parse(date)/1000
+        var unixtime = Date.parse(date) / 1000
         this.setState({
             "date": unixtime
         });
@@ -52,8 +52,13 @@ export default class RegisterMeetup extends Component {
 
     handleCreate = () => {
         this.setState({ dialogOpen: false });
-        var speaker = this.state.selectedSpeaker
-        window.contract.createMeetup(this.state.name, this.state.date, this.state.selectedSpeaker, this.state.selectedLocation, { from: window.signedInUser }, function () {
+
+        window.contract.createMeetup(this.state.name, this.state.date, this.state.selectedSpeaker, this.state.selectedLocation, { from: window.signedInUser }, function (error, result) {
+            if (error) {
+                alert(error)
+            } else {
+                alert(result)
+            }
         });
     };
 

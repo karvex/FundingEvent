@@ -26,9 +26,15 @@ class RegisterLocation extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+    var _this = this
 
     window.contract.registerLocation(this.state.streetAddress, this.state.cost, this.state.capacity, { from: window.signedInUser }, function (error, result) {
-      alert("success!");
+      if (error) {
+        alert(error)
+      } else {
+        alert(result)
+        _this.setState({streetAddress: '', cost: '', capacity: ''})
+      }
     });
   }
 
@@ -47,7 +53,7 @@ class RegisterLocation extends Component {
           <br />
           <TextField
             name="cost"
-            type="text"
+            type="number"
             placeholder="Cost"
             onChange={this.handleChange}
             value={this.state.cost}
@@ -55,10 +61,10 @@ class RegisterLocation extends Component {
           <br />
           <TextField
             name="capacity"
-            type="text"
+            type="number"
             placeholder="capacity"
             onChange={this.handleChange}
-            value={this.state.imageUrl}
+            value={this.state.capacity}
             style={{ margin: 20 }} />
           <br />
           <RaisedButton

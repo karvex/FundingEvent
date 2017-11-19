@@ -26,9 +26,15 @@ class RegisterSpeaker extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+    var _this = this
 
     window.contract.registerSpeaker(this.state.name, this.state.bio, this.state.imageUrl, { from: window.signedInUser }, function (error, result) {
-      alert("success!");
+      if (error) {
+        alert(error)
+      } else {
+        alert(result)
+        _this.setState({name: '', bio: '', imageUrl: ''})
+      }
     });
   }
 

@@ -25,9 +25,15 @@ class RegisterParticipant extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-
-    window.contract.registerParticipant(this.state.name, this.state.email, { from: window.signedInUser }, function () {
-      alert("success!");
+    var _this = this
+    
+    window.contract.registerParticipant(this.state.name, this.state.email, { from: window.signedInUser }, function (error, result) {
+      if (error) {
+        alert(error)
+      } else {
+        alert(result)
+        _this.setState({name: '', email: ''})
+      }
     });
   }
 
@@ -49,7 +55,7 @@ class RegisterParticipant extends Component {
             type="text"
             placeholder="Email"
             onChange={this.handleChange}
-            value={this.state.bio}
+            value={this.state.email}
             style={{ margin: 20 }} />
           <br />
           <RaisedButton
