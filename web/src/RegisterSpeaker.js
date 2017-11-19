@@ -24,17 +24,17 @@ class RegisterSpeaker extends Component {
     });
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
+  handleSubmit = (event) => {
+    event.preventDefault();
 
-    window.contract.RegisterSpeaker(this.state.name, this.state.bio, this.state.imageUrl, { from: window.signedInUser }, function () {
+    window.contract.registerSpeaker(this.state.name, this.state.bio, this.state.imageUrl, { from: window.signedInUser }, function (error, result) {
       alert("success!");
     });
   }
 
   render() {
     return (
-      <div className="RegisterSpeaker" style={{ display: "flex", flexDirection: "column" }}>
+      <div className="RegisterSpeaker">
         <h1>Add Speaker</h1>
         <div className="AddSpeaker">
           <TextField
@@ -44,7 +44,7 @@ class RegisterSpeaker extends Component {
             onChange={this.handleChange}
             value={this.state.name}
             style={{ margin: 20 }} />
-          
+          <br/>
           <TextField
             name="bio"
             type="text"
@@ -52,7 +52,7 @@ class RegisterSpeaker extends Component {
             onChange={this.handleChange}
             value={this.state.bio}
             style={{ margin: 20 }} />
-
+          <br/>
           <TextField
             name="imageUrl"
             type="text"
@@ -60,7 +60,7 @@ class RegisterSpeaker extends Component {
             onChange={this.handleChange}
             value={this.state.imageUrl}
             style={{ margin: 20 }} />
-
+          <br/>
           <RaisedButton
             label="Submit"
             onClick={this.handleSubmit} />

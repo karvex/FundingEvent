@@ -26,7 +26,7 @@ class RegisterParticipant extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    window.contract.RegisterParticipant(this.state.name, this.state.email, { from: window.signedInUser }, function () {
+    window.contract.registerParticipant(this.state.name, this.state.email, { from: window.signedInUser }, function () {
       alert("success!");
     });
   }
