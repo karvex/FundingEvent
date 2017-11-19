@@ -26,19 +26,23 @@ class ListMeetups extends Component {
     var meetupListData = [
       {
         img: 'https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/5ab70a8813bed2fe065ca7534513866145155873_2880x1620.jpg?quality=95&w=480',
-        name: 'Anna Johnson',
+        title: "Why do I make art? To build time capsules for my heritage?",
+        speaker: 'Anna Johnson'
       },
       {
         img: 'http://image.pbs.org/video-assets/pbs/ted-talks/209634/images/mezzanine_243.jpg.resize.800x450.jpg',
-        name: 'Maria Boss',
+        title: "How to transform apocalypse fatigue into action on global warming?",
+        speaker: 'Maria Boss',
       },
       {
         img: 'https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/25a5bc18d2472308c8ed2bb401b4a497f49a0265_1600x1200.jpg?quality=89&w=800',
-        name: 'Sandra Maple',
+        title: "What I learned serving time for a crime I didn't commit?",
+        speaker: 'Sandra Maple',
       },
       {
         img: 'https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/110884_800x600.jpg?w=1200',
-        name: 'John Leek',
+        title: "How judges can show respect?",
+        speaker: 'John Leek',
       },
     ];
 
@@ -52,7 +56,8 @@ class ListMeetups extends Component {
             {meetupListData.map((meetup) => (
               <GridTile
                 key={meetup.img}
-                title={meetup.name}
+                title={meetup.title}
+                subtitle={<span>by <b>{meetup.speaker}</b></span>}
                 actionIcon={<FlatButton label="Send funds" primary={true} />}>
                 <img src={meetup.img} />
               </GridTile>
