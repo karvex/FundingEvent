@@ -124,7 +124,7 @@ contract FundingEvent {
     }
     
     function getMeetup(address meetup) private returns (Meetup storage) {
-        for (uint i=0; i < meetups.length; i++) {
+        for (uint i = 0; i < meetups.length; i++) {
             if (meetups[i].creator == meetup) {
                 return meetups[i];
             }
@@ -133,7 +133,7 @@ contract FundingEvent {
     }
     
     function speakerExists(address speaker) private view returns (bool) {
-        for (uint i=0; i < speakers.length; i++) {
+        for (uint i = 0; i < speakers.length; i++) {
             if (speakers[i].owner == speaker) {
                 return true;
             }
@@ -142,7 +142,7 @@ contract FundingEvent {
     }
     
     function locationExists(address location) private view returns (bool) {
-        for (uint i=0; i < locations.length; i++) {
+        for (uint i = 0; i < locations.length; i++) {
             if (locations[i].owner == location) {
                 return true;
             }
@@ -157,7 +157,7 @@ contract FundingEvent {
     
     modifier meetupExists(address meetup) {
         bool success = false;
-        for (uint i=0; i < meetups.length; i++) {
+        for (uint i = 0; i < meetups.length; i++) {
             if (meetups[i].creator == meetup) {
                 success = true;
                 break;
