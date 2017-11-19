@@ -2,15 +2,9 @@ pragma solidity ^0.4.18;
 
 contract FundingEvent {
     
-    Speaker[] public speakers;
-    mapping(address => Participant) public participants;
-    Location[] private locations;
-    Meetup[] private meetups;
-    mapping(address => mapping(address => uint)) donators;
-    
     struct Speaker {
         address owner;
-        string name;
+        bytes32 name;
         string bio;
         string url;
     }
@@ -33,7 +27,7 @@ contract FundingEvent {
     
     struct Meetup {
         address creator;
-        string title;
+        bytes32 title;
         uint blockTime;
         address speaker;
         address location;
@@ -42,7 +36,13 @@ contract FundingEvent {
         MeetupStatus status;
     }
     
-    function registerSpeaker(string name, string bio, string url) public {
+    Speaker[] private speakers;
+    mapping(address => Participant) private participants;
+    Location[] private locations;
+    Meetup[] private meetups;
+    mapping(address => mapping(address => uint)) donators;
+    
+    function registerSpeaker(bytes32 name, string bio, string url) public {
         require(!speakerExists(msg.sender));
         speakers.push(Speaker(msg.sender, name, bio, url));
     }
@@ -51,9 +51,10 @@ contract FundingEvent {
         return speakers;  
     }
     
-    function getSpeaker(uint index) public view returns (string, string, string) {
-        Speaker memory speaker = speakers[index];
-        require(bytes(speaker.name).length != 0);
+    function getSpeaker(uint index) public view returns (bytes32, string, string) {
+        require(speakers.length > index);
+        Speaker storage speaker = speakers[index];
+        require(speaker.name != 0);
         return (speaker.name, speaker.bio, speaker.url);
     }
 
@@ -65,30 +66,24 @@ contract FundingEvent {
         locations.push(Location(msg.sender, streetAddress, cost, capacity));
     }
     
-    function getLocations() public view returns (Location[]) {
-        return locations;
-    }
-    
     function getLocation(uint index) public view returns (string, uint, uint) {
-        Location memory location = locations[index];
+        require(locations.length > index);
+        Location storage location = locations[index];
         require(location.capacity > 0);
         return (location.streetAddress, location.cost, location.capacity);
     }
     
-    function createMeetup(string title, uint blockTime, address speaker, address location) public {
+    function createMeetup(bytes32 title, uint blockTime, address speaker, address location) public {
         require(locationExists(location));
         require(speakerExists(speaker));
-        require(bytes(title).length > 0);
+        require(title > 0);
         require(blockTime > now);
         meetups.push(Meetup(msg.sender, title, blockTime, speaker, location, 0, 0, MeetupStatus.ongoing));
     }
     
-    function getMeetups() public view returns (Meetup[]) {
-        return meetups;
-    }
-    
-    function getMeetup(uint index) public view returns (address, string, uint, address, address, uint, uint, uint) {
-        Meetup memory meetup = meetups[index];
+    function getMeetup(uint index) public view returns (address, bytes32, uint, address, address, uint, uint, uint) {
+        require(meetups.length > index);
+        Meetup storage meetup = meetups[index];
         require(meetup.blockTime != 0);
         return (meetup.creator, meetup.title, meetup.blockTime, meetup.speaker, meetup.location, meetup.minAmount, meetup.balance, uint(meetup.status));
     }
@@ -128,7 +123,7 @@ contract FundingEvent {
         }
     }
     
-    function getMeetup(address meetup) private constant returns (Meetup storage) {
+    function getMeetup(address meetup) private returns (Meetup storage) {
         for (uint i=0; i < meetups.length; i++) {
             if (meetups[i].creator == meetup) {
                 return meetups[i];
