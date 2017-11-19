@@ -2,10 +2,10 @@ pragma solidity ^0.4.18;
 
 contract FundingEvent {
     
-    Speaker[] public _speakers;
+    Speaker[] public speakers;
     mapping(address => Participant) public participants;
-    Location[] private _locations;
-    Meetup[] private _meetups;
+    Location[] private locations;
+    Meetup[] private meetups;
     mapping(address => mapping(address => uint)) donators;
     
     struct Speaker {
@@ -44,15 +44,15 @@ contract FundingEvent {
     
     function registerSpeaker(string name, string bio, string url) public {
         require(!speakerExists(msg.sender));
-        _speakers.push(Speaker(msg.sender, name, bio, url));
+        speakers.push(Speaker(msg.sender, name, bio, url));
     }
     
     function getSpeakers() public view returns (Speaker[]) {
-        return _speakers;  
+        return speakers;  
     }
     
     function getSpeaker(uint index) public view returns (string, string, string) {
-        Speaker memory speaker = _speakers[index];
+        Speaker memory speaker = speakers[index];
         require(bytes(speaker.name).length != 0);
         return (speaker.name, speaker.bio, speaker.url);
     }
@@ -62,15 +62,15 @@ contract FundingEvent {
     }
     
     function registerLocation(string streetAddress, uint cost, uint capacity) public {
-        _locations.push(Location(msg.sender, streetAddress, cost, capacity));
+        locations.push(Location(msg.sender, streetAddress, cost, capacity));
     }
     
     function getLocations() public view returns (Location[]) {
-        return _locations;
+        return locations;
     }
     
     function getLocation(uint index) public view returns (string, uint, uint) {
-        Location memory location = _locations[index];
+        Location memory location = locations[index];
         require(location.capacity > 0);
         return (location.streetAddress, location.cost, location.capacity);
     }
@@ -80,15 +80,15 @@ contract FundingEvent {
         require(speakerExists(speaker));
         require(bytes(title).length > 0);
         require(blockTime > now);
-        _meetups.push(Meetup(msg.sender, title, blockTime, speaker, location, 0, 0, MeetupStatus.ongoing));
+        meetups.push(Meetup(msg.sender, title, blockTime, speaker, location, 0, 0, MeetupStatus.ongoing));
     }
     
     function getMeetups() public view returns (Meetup[]) {
-        return _meetups;
+        return meetups;
     }
     
     function getMeetup(uint index) public view returns (address, string, uint, address, address, uint, uint, uint) {
-        Meetup memory meetup = _meetups[index];
+        Meetup memory meetup = meetups[index];
         require(meetup.blockTime != 0);
         return (meetup.creator, meetup.title, meetup.blockTime, meetup.speaker, meetup.location, meetup.minAmount, meetup.balance, uint(meetup.status));
     }
@@ -129,17 +129,17 @@ contract FundingEvent {
     }
     
     function getMeetup(address meetup) private constant returns (Meetup storage) {
-        for (uint i=0; i < _meetups.length; i++) {
-            if (_meetups[i].creator == meetup) {
-                return _meetups[i];
+        for (uint i=0; i < meetups.length; i++) {
+            if (meetups[i].creator == meetup) {
+                return meetups[i];
             }
         }
         revert();
     }
     
     function speakerExists(address speaker) private view returns (bool) {
-        for (uint i=0; i < _speakers.length; i++) {
-            if (_speakers[i].owner == speaker) {
+        for (uint i=0; i < speakers.length; i++) {
+            if (speakers[i].owner == speaker) {
                 return true;
             }
         }
@@ -147,8 +147,8 @@ contract FundingEvent {
     }
     
     function locationExists(address location) private view returns (bool) {
-        for (uint i=0; i < _locations.length; i++) {
-            if (_locations[i].owner == location) {
+        for (uint i=0; i < locations.length; i++) {
+            if (locations[i].owner == location) {
                 return true;
             }
         }
@@ -162,8 +162,8 @@ contract FundingEvent {
     
     modifier meetupExists(address meetup) {
         bool success = false;
-        for (uint i=0; i < _meetups.length; i++) {
-            if (_meetups[i].creator == meetup) {
+        for (uint i=0; i < meetups.length; i++) {
+            if (meetups[i].creator == meetup) {
                 success = true;
                 break;
             }
