@@ -113,6 +113,7 @@ contract FundingEvent {
     }
     
     function participantWithdrawal(address meetup) public meetupExists(meetup) participantExists(msg.sender) {
+        //TODO: prevent refunds 48h before the meetup, 
         uint amount = donators[meetup][msg.sender];
         require(amount > 0);
         if (getMeetup(meetup).status != MeetupStatus.finished) {
@@ -122,6 +123,7 @@ contract FundingEvent {
     }
     
     function speakerWithdrawal(address meetup) public meetupExists(meetup) {
+        //TODO: check min amount!, isSpeakerAtMeetup?
         require(speakerExists(msg.sender));
         Meetup storage currentMeetup = getMeetup(meetup);
         require(currentMeetup.blockTime < now);
