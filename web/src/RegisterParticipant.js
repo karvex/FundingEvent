@@ -43,7 +43,7 @@ class RegisterParticipant extends Component {
             onChange={this.handleChange}
             value={this.state.name}
             style={{ margin: 20 }} />
-          
+          <br />
           <TextField
             name="email"
             type="text"
@@ -51,10 +51,11 @@ class RegisterParticipant extends Component {
             onChange={this.handleChange}
             value={this.state.bio}
             style={{ margin: 20 }} />
-
+          <br />
           <RaisedButton
             label="Submit"
-            onClick={this.handleSubmit} />
+            onClick={this.handleSubmit}
+            style={{ margin: 20 }} />
         </div>
       </div>
     )

@@ -44,7 +44,7 @@ class RegisterSpeaker extends Component {
             onChange={this.handleChange}
             value={this.state.name}
             style={{ margin: 20 }} />
-          <br/>
+          <br />
           <TextField
             name="bio"
             type="text"
@@ -52,7 +52,7 @@ class RegisterSpeaker extends Component {
             onChange={this.handleChange}
             value={this.state.bio}
             style={{ margin: 20 }} />
-          <br/>
+          <br />
           <TextField
             name="imageUrl"
             type="text"
@@ -60,10 +60,11 @@ class RegisterSpeaker extends Component {
             onChange={this.handleChange}
             value={this.state.imageUrl}
             style={{ margin: 20 }} />
-          <br/>
+          <br />
           <RaisedButton
             label="Submit"
-            onClick={this.handleSubmit} />
+            onClick={this.handleSubmit}
+            style={{ margin: 20 }} />
         </div>
       </div>
     )

@@ -44,7 +44,7 @@ class RegisterLocation extends Component {
             onChange={this.handleChange}
             value={this.state.streetAddress}
             style={{ margin: 20 }} />
-          <br/>
+          <br />
           <TextField
             name="cost"
             type="text"
@@ -52,7 +52,7 @@ class RegisterLocation extends Component {
             onChange={this.handleChange}
             value={this.state.cost}
             style={{ margin: 20 }} />
-          <br/>
+          <br />
           <TextField
             name="capacity"
             type="text"
@@ -60,10 +60,11 @@ class RegisterLocation extends Component {
             onChange={this.handleChange}
             value={this.state.imageUrl}
             style={{ margin: 20 }} />
-          <br/>
+          <br />
           <RaisedButton
             label="Submit"
-            onClick={this.handleSubmit} />
+            onClick={this.handleSubmit}
+            style={{ margin: 20 }} />
         </div>
       </div>
     )
