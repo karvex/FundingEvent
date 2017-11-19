@@ -65,11 +65,11 @@ contract FundingEvent {
         locations.push(Location(msg.sender, streetAddress, cost, capacity));
     }
     
-    function getLocation(uint index) public view returns (string, uint, uint) {
+    function getLocation(uint index) public view returns (string, address, uint, uint) {
         require(locations.length > index);
         Location storage location = locations[index];
         require(location.capacity > 0);
-        return (location.streetAddress, location.cost, location.capacity);
+        return (location.streetAddress, location.owner, location.cost, location.capacity);
     }
     
     function createMeetup(string title, uint blockTime, address speaker, address location) public {
