@@ -34,8 +34,10 @@ class Page extends Component {
 
   render() {
     let components = []
-
-    if (this.state.index == 2) {
+    
+    if (this.state.index == 1) {
+      components.push(<ListMeetups />)
+    } else if (this.state.index == 2) {
       components.push(<RegisterSpeaker />)
       components.push(<Speakers />)    
     } else if (this.state.index == 3) {
@@ -73,7 +75,6 @@ class Page extends Component {
             </Menu>
           </Drawer>
           {components}
-          <ListMeetups />
         </MuiThemeProvider>
       </div>
     )
