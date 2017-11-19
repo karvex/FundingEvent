@@ -40,6 +40,7 @@ class Page extends Component {
       components.push(<CreateMeetup />)
     } else if (this.state.index == 2) {
       components.push(<RegisterSpeaker />)
+      components.push(<Speakers />)    
     } else if (this.state.index == 3) {
       components.push(<RegisterLocation />)
       components.push(<Locations />)
