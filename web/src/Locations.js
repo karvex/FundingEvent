@@ -19,7 +19,7 @@ class Locations extends Component {
     let _this = this;
     var locations = []
 
-    window.contract.getLocationsCount({ from: window.signedInUser }, function (error, result) {
+    window.contract.getLocationCount({ from: window.signedInUser }, function (error, result) {
       var locationCount = result.c[0]
 
       for (var i = 0; i < locationCount; i++) {
@@ -43,7 +43,7 @@ class Locations extends Component {
         <ListItem
           value={i}
           primaryText={locations[i].streetAddress}
-          secondaryText={"Cost: " + locations[i].cost + "Capacity: " + locations[i].capacity}
+          secondaryText={"Cost: " + locations[i].cost + ", Capacity: " + locations[i].capacity}
         />
       );
     }

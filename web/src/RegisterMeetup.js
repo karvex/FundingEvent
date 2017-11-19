@@ -43,15 +43,17 @@ export default class RegisterMeetup extends Component {
         });
     }
 
-    handleDateChange = (event) => {
+    handleDateChange = (arg, date) => {
+        var unixtime = Date.parse(date)/1000
         this.setState({
-            [event.target.name]: event.target.value
+            "date": unixtime
         });
     }
 
     handleCreate = () => {
         this.setState({ dialogOpen: false });
-        window.contract.createMeetup("", 0, "", "", { from: window.signedInUser }, function () {
+        var speaker = this.state.selectedSpeaker
+        window.contract.createMeetup(this.state.name, this.state.date, this.state.selectedSpeaker, this.state.selectedLocation, { from: window.signedInUser }, function () {
         });
     };
 
@@ -71,13 +73,13 @@ export default class RegisterMeetup extends Component {
         let _this = this;
         var speakers = []
 
-        window.contract.getSpeakersCount({ from: window.signedInUser }, function (error, result) {
+        window.contract.getSpeakerCount({ from: window.signedInUser }, function (error, result) {
             var speakersCount = result.c[0]
 
             for (var i = 0; i < speakersCount; i++) {
                 window.contract.getSpeaker(i, { from: window.signedInUser }, function (error, result) {
                     if (result != null) {
-                        speakers.push({ name: result[0], bio: result[1], imageUrl: result[2] })
+                        speakers.push({ name: result[0], address: result[1], bio: result[2], imageUrl: result[3] })
                         _this.setState({
                             speakers: speakers
                         })
@@ -91,13 +93,13 @@ export default class RegisterMeetup extends Component {
         let _this = this;
         var locations = []
 
-        window.contract.getLocationsCount({ from: window.signedInUser }, function (error, result) {
+        window.contract.getLocationCount({ from: window.signedInUser }, function (error, result) {
             var locationCount = result.c[0]
 
             for (var i = 0; i < locationCount; i++) {
                 window.contract.getLocation(i, { from: window.signedInUser }, function (error, result) {
                     if (result != null) {
-                        locations.push({ streetAddress: result[0], cost: result[1], capacity: result[2] })
+                        locations.push({ streetAddress: result[0], address: result[1], cost: result[2], capacity: result[3] })
                         _this.setState({
                             locations: locations
                         })
@@ -127,7 +129,7 @@ export default class RegisterMeetup extends Component {
         for (var i = 0; i < speakers.length; i++) {
             speakerMenuItems.push(
                 <MenuItem
-                    value={i + 1}
+                    value={speakers[i].address}
                     primaryText={speakers[i].name}
                     secondaryText={speakers[i].bio}
                 />
@@ -146,7 +148,7 @@ export default class RegisterMeetup extends Component {
         for (var i = 0; i < locations.length; i++) {
             locationMenuItems.push(
                 <MenuItem
-                    value={i + 1}
+                    value={locations[i].address}
                     primaryText={locations[i].streetAddress}
                     secondaryText={"Cost: " + locations[i].cost + ", Capacity: " + locations[i].capacity}
                 />

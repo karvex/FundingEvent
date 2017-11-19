@@ -20,7 +20,7 @@ class Speakers extends Component {
     let _this = this;
     var speakers = []
 
-    window.contract.getSpeakersCount({ from: window.signedInUser }, function (error, result) {
+    window.contract.getSpeakerCount({ from: window.signedInUser }, function (error, result) {
       var speakersCount = result.c[0]
 
       for (var i = 0; i < speakersCount; i++) {
