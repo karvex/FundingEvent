@@ -18,7 +18,7 @@ export default class RegisterMeetup extends Component {
             selectedIndex: 1,
             dialogOpen: true,
             name: "",
-            dateTime: "",
+            date: "",
             speakers: [],
             selectedSpeaker: 0,
             locations: [],
@@ -38,6 +38,12 @@ export default class RegisterMeetup extends Component {
     }
 
     handleChange = (event) => {
+        this.setState({
+            [event.target.name]: event.target.value
+        });
+    }
+
+    handleDateChange = (event) => {
         this.setState({
             [event.target.name]: event.target.value
         });
@@ -194,8 +200,10 @@ export default class RegisterMeetup extends Component {
                             style={{ margin: 20 }} />
 
                         <DatePicker
+                            name="date"
                             hintText="Date"
                             mode="landscape"
+                            onChange={this.handleDateChange}
                             style={{ margin: 20 }} />
                     </Dialog>
                 </div>
