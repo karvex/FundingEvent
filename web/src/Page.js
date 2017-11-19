@@ -25,7 +25,7 @@ class Page extends Component {
   handleToggle = () => this.setState({ open: !this.state.open });
   handleClose = () => this.setState({ open: false });
   handleChange = (event, index, value) => {
-    this.setState({ index: index, open: false });
+    this.setState({ index: index, open: false, dialogOpen: false });
   }
 
   handleOpenCreateEvent = () => {
