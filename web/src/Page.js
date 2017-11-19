@@ -1,25 +1,30 @@
 import React, { Component } from 'react'
 import './index.css'
-import RegisterSpeaker from './RegisterSpeaker'
-import Speakers from './Speakers'
-import RegisterParticipant from './RegisterParticipant'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import Menu from 'material-ui/Menu';
+import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem';
+import RegisterSpeaker from './RegisterSpeaker'
+import RegisterParticipant from './RegisterParticipant'
+import RegisterMeetup from './RegisterMeetup'
 
 class Page extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { open: false, index: 1 };
+    this.state = { open: false, index: 1, dialogOpen: false };
   }
 
   handleToggle = () => this.setState({ open: !this.state.open });
   handleClose = () => this.setState({ open: false });
   handleChange = (event, index, value) => {
     this.setState({ index: index, open: false });
+  }
+
+  handleOpenCreateEvent = () => {
+    this.setState({ dialogOpen: true });
   }
 
   render() {
@@ -29,20 +34,25 @@ class Page extends Component {
       // TODO: Add
     } else if (this.state.index == 2) {
       components.push(<RegisterSpeaker />)
-      components.push(<Speakers />)
     } else if (this.state.index == 3) {
       // TODO: Add
     } else if (this.state.index == 4) {
       components.push(<RegisterParticipant />)
     }
 
+    if (this.state.dialogOpen) {
+      components.push(<RegisterMeetup />)
+    }
+
     return (
       <div className="App">
         <MuiThemeProvider>
           <AppBar
-            title="FundingEvent"
+            title="EVENTIFY"
             iconClassNameRight="muidocs-icon-navigation-expand-more"
-            onLeftIconButtonTouchTap={this.handleToggle} />
+            onLeftIconButtonTouchTap={this.handleToggle} 
+            onRightIconButtonTouchTap={this.handleOpenCreateEvent} 
+            iconElementRight={<FlatButton label="Create event" />}/>
           <Drawer
             docked={false}
             width={200}
