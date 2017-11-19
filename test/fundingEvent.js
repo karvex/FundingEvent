@@ -1,26 +1,36 @@
 var FundingEvent = artifacts.require("./FundingEvent.sol");
 
 contract('FundingEvent', function(accounts) {
-  it("add data", function() {
-      var i;
-      var a0 = "0xca35b7d915458ef540ade6068dfe2f44e8fa733c";
+  it("should register a speaker and verify its name", function() {
+    var i;
 
     return FundingEvent.deployed().then(function(instance) {
         i = instance;
         instance.registerSpeaker("Nick", "bio", "url", {from: accounts[0]});
         instance.registerLocation("Cirkus", 14000, 700, {from: accounts[1]});
         instance.registerParticipant("Chi", "chihaopoon@gmail.com", {from: accounts[2]});
-        instance.createMeetup("Hackathon", 999999999999999, a0, a0, {from: accounts[3]});
-        
-        instance.registerSpeaker("jill111", "Breakfast", "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/5ab70a8813bed2fe065ca7534513866145155873_2880x1620.jpg?quality=95&w=480", {from: accounts[2]});
-        //instance.registerSpeaker("pashminu", "Tasty burger", "http://image.pbs.org/video-assets/pbs/ted-talks/209634/images/mezzanine_243.jpg.resize.800x450.jpg", {from: accounts[3]});
-        //instance.registerSpeaker("Danson67", "Camera", "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/25a5bc18d2472308c8ed2bb401b4a497f49a0265_1600x1200.jpg?quality=89&w=800", {from: accounts[4]});
-        //instance.registerSpeaker("fancycrave1", "Morning", "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/110884_800x600.jpg?w=1200", {from: accounts[5]});
-      //return instance.getBalance.call(accounts[0]);
+        instance.createMeetup("Hackathon", 999999999999, accounts[0], accounts[1], {from: accounts[2]});
+        instance.registerSpeaker("Alice", "Breakfast", "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/5ab70a8813bed2fe065ca7534513866145155873_2880x1620.jpg?quality=95&w=480", {from: accounts[2]});
+        instance.registerSpeaker("Bob", "Tasty burger", "http://image.pbs.org/video-assets/pbs/ted-talks/209634/images/mezzanine_243.jpg.resize.800x450.jpg", {from: accounts[3]});
+        instance.registerSpeaker("Carl", "Camera", "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/25a5bc18d2472308c8ed2bb401b4a497f49a0265_1600x1200.jpg?quality=89&w=800", {from: accounts[4]});
+        instance.registerSpeaker("Diana", "Morning", "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/110884_800x600.jpg?w=1200", {from: accounts[5]});
     }).then(function() {
         return i.getSpeaker.call(0);
     }).then(function(speaker) {
-        assert.equal(web3.toAscii(speaker[0]), "name", "Name OK");
+        assert.equal(speaker[0], "Nick", "Name OK");
+    });
+  });
+
+  it("should create a meetup and handle everything", function() {
+    var i;
+
+    return FundingEvent.deployed().then(function(instance) {
+        i = instance;
+        instance.registerSpeaker("Mowgli", "Morning", "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/110884_800x600.jpg?w=1200", {from: accounts[6]});
+    }).then(function() {
+        return i.getSpeaker.call(0);
+    }).then(function(speaker) {
+        assert.equal(speaker[0], "Nick", "Name OK");
     });
   });
 //   it("should call a function that depends on a linked library", function() {
