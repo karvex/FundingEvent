@@ -34,8 +34,8 @@ export default class RegisterMeetup extends Component {
 
     handleCreate = () => {
         this.setState({ dialogOpen: false });
-        window.contract.createMeetup(this.state.name, 0, 0, 0, { from: window.signedInUser }, function () {
-            this.handleClose()
+        window.contract.createMeetup("", 0, "", "", { from: window.signedInUser }, function () {
+            this.handleClose();
           });
     };
 
