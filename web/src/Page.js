@@ -1,14 +1,19 @@
 import React, { Component } from 'react'
 import './index.css'
+import RegisterSpeaker from './RegisterSpeaker'
+import Speakers from './Speakers'
+import CreateMeetup from './CreateMeetup'
+import RegisterParticipant from './RegisterParticipant'
+import RegisterLocation from './RegisterLocation'
+import Locations from './Locations'
+import RegisterMeetup from './RegisterMeetup'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import Menu from 'material-ui/Menu';
 import FlatButton from 'material-ui/FlatButton';
 import MenuItem from 'material-ui/MenuItem';
-import RegisterSpeaker from './RegisterSpeaker'
-import RegisterParticipant from './RegisterParticipant'
-import RegisterMeetup from './RegisterMeetup'
+
 
 class Page extends Component {
 
@@ -32,10 +37,12 @@ class Page extends Component {
 
     if (this.state.index == 1) {
       // TODO: Add
+      components.push(<CreateMeetup />)
     } else if (this.state.index == 2) {
       components.push(<RegisterSpeaker />)
     } else if (this.state.index == 3) {
-      // TODO: Add
+      components.push(<RegisterLocation />)
+      components.push(<Locations />)
     } else if (this.state.index == 4) {
       components.push(<RegisterParticipant />)
     }
