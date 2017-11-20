@@ -68,8 +68,10 @@ class ListMeetups extends Component {
   }
 
   handleFund(address) {
-    alert(address)
-    window.contract.donate(address, { from: window.signedInUser, value: 0.1  }, function (error, result) {
+    window.contract.donate(address, { from: window.signedInUser, value: 100000000000000000  }, function (error, result) {
+      if (error) {
+        alert(error)
+      }
     });
   }
 
