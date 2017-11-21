@@ -25,7 +25,7 @@ class Locations extends Component {
       for (var i = 0; i < locationCount; i++) {
         window.contract.getLocation(i, { from: window.signedInUser }, function (error, result) {
           if (result != null) {
-            locations.push({ streetAddress: result[0], cost: result[1], capacity: result[2] })
+            locations.push({ streetAddress: result[0], cost: result[2], capacity: result[3] })
             _this.setState({
               locations: locations
             })

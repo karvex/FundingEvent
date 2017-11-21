@@ -26,7 +26,7 @@ class Speakers extends Component {
       for (var i = 0; i < speakersCount; i++) {
         window.contract.getSpeaker(i, { from: window.signedInUser }, function (error, result) {
           if (result != null) {
-            speakers.push({ name: result[0], bio: result[1], imageUrl: result[2] })
+            speakers.push({ name: result[0], bio: result[2], imageUrl: result[3] })
             _this.setState({
               speakers: speakers
             })
@@ -45,7 +45,7 @@ class Speakers extends Component {
           value={i}
           primaryText={speakers[i].name}
           secondaryText={speakers[i].bio}
-          leftAvatar={<Avatar src="images/kerem-128.jpg" />}
+          leftAvatar={<Avatar/>}
         />
       );
     }
