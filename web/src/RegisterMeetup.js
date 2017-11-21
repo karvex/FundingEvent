@@ -136,7 +136,6 @@ export default class RegisterMeetup extends Component {
                 <MenuItem
                     value={speakers[i].address}
                     primaryText={speakers[i].name}
-                    secondaryText={speakers[i].bio}
                 />
             );
         }
@@ -155,7 +154,6 @@ export default class RegisterMeetup extends Component {
                 <MenuItem
                     value={locations[i].address}
                     primaryText={locations[i].streetAddress}
-                    secondaryText={"Cost: " + locations[i].cost + ", Capacity: " + locations[i].capacity}
                 />
             );
         }
